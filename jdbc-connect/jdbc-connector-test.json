@@ -1,0 +1,14 @@
+{
+  "name": "jdbc-sink-connector-test2",
+  "config": {
+    "connector.class": "com.ibm.eventstreams.connect.jdbcsink.JDBCSinkConnector",
+    "tasks.max": "1",
+    "topics": "kafka-test2",
+    "connection.url": "jdbc:db2://db2:50000/MYDB",
+    "connection.user": "db2inst1",
+    "connection.password": "1qazxsw2",
+    "connection.ds.pool.size": 5,
+    "insert.mode.databaselevel": true,
+    "table.name.format": "DB2INST1.COMPANY2"
+  }
+}

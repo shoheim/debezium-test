@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: "debezium/zookeeper:1.8"
+    container_name: "zookeeper"
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    networks:
+      - debe-nw
+  kafka:
+    image: "debezium/kafka:1.8"
+    container_name: "kafka"
+    ports:
+      - "9092:9092"
+    environment:
+      ZOOKEEPER_CONNECT: "zookeeper:2181"
+    depends_on:
+      - zookeeper
+    networks:
+      - debe-nw
+  mysql:
+    image: "debezium/example-mysql:1.8"
+    container_name: "mysql"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "debezium"
+      MYSQL_USER: "mysqluser"
+      MYSQL_PASSWORD: "mysqlpw"
+    networks:
+      - debe-nw
+  db2:
+    image: "ibmcom/db2"
+    container_name: "db2"
+    ports:
+      - "50000:50000"
+    environment:
+      LICENSE: "accept"
+      DB2INST1_PASSWORD: "1qazxsw2"
+      DBNAME: "MYDB"
+    privileged: true
+#    volumes:
+#      - ./db2-data:/database
+    networks:
+      - debe-nw
+  connect:
+    image: "debezium/connect:1.8"
+    build: ./connect
+    container_name: "connect"
+    ports:
+      - "8083:8083"
+    environment:
+      GROUP_ID: "1"
+      CONFIG_STORAGE_TOPIC: "my_connect_configs"
+      OFFSET_STORAGE_TOPIC: "my_connect_offsets"
+      STATUS_STORAGE_TOPIC: "my_connect_statuses"
+      BOOTSTRAP_SERVERS: "kafka:9092"
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+    depends_on:
+      - kafka
+      - mysql
+      - db2
+    networks:
+      - debe-nw
+#  jdbc-connect:
+#    build: ./jdbc-connect
+#    container_name: "jdbc-connect"
+#    ports:
+#      - "8084:8083"
+#    depends_on:
+#      - kafka
+#      - db2
+#    networks:
+#      - debe-nw
+networks:
+  debe-nw:
+    driver: bridge
