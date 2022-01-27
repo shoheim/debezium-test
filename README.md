@@ -6,6 +6,12 @@ https://debezium.io/documentation/reference/1.8/tutorial.html
 
 https://github.com/ibm-messaging/kafka-connect-jdbc-sink
 
+# Usage
+
+'docker-compose up' で起動して、Source Connector SMTあり2のConnectorとSink Connectorを登録してあげればOK
+
+※Db2がちゃんと起動するのを待って実行すること
+
 
 # Source Connector
 
