@@ -6,16 +6,16 @@ https://debezium.io/documentation/reference/1.8/tutorial.html
 
 https://github.com/ibm-messaging/kafka-connect-jdbc-sink
 
-# Usage
+## Usage
 
-'docker-compose up' で起動して、Source Connector SMTあり2のConnectorとSink Connectorを登録してあげればOK
+`docker-compose up` で起動して、Source ConnectorのSMTあり2のConnectorとSink Connectorを登録してあげればOK
 
-※Db2がちゃんと起動するのを待って実行すること
+※Db2がちゃんと上がりきるのを待って実行すること
 
 
-# Source Connector
+## Source Connector
 
-## SMTなし
+### SMTなし
 
 登録
 
@@ -41,7 +41,7 @@ Value
 
 curl -X DELETE http://localhost:8083/connectors/source-connector
 
-## SMTあり
+### SMTあり
 
 DebeziumのNew Record State Extractionを利用
 
@@ -72,6 +72,7 @@ source-connector-smt.json
 curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @source-connector-smt.json
 
 メッセージ確認
+
 Key
 ```json
 {"schema":{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"}],"optional":false,"name":"dbserver1.inventory.customers.Key"},"payload":{"id":1001}}
@@ -121,7 +122,7 @@ Value
 curl -X DELETE http://localhost:8083/connectors/source-connector-smt
 
 
-## SMTあり2
+### SMTあり2
 
 Kafka Connectで提供されているReplaceFieldも併用
 
@@ -204,15 +205,17 @@ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 
 
 このフォーマットであればJDBC Sink Connectorは処理できる
 
-# Sink Connector
+## Sink Connector
 
 登録
 
 curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @jdbc-sink-connector.json
 
-# Kafka
+## Kafka
 
+```
 docker exec -it kafka bash
+```
 
 ```
 $ cd bin
@@ -243,7 +246,7 @@ $ ./kafka-console-consumer.sh --topic dbserver1.inventory.customers --from-begin
 ```
 
 
-# Db2
+## Db2
 
 docker exec -it db2 bash
 
