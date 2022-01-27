@@ -8,7 +8,7 @@ https://github.com/ibm-messaging/kafka-connect-jdbc-sink
 
 ## Usage
 
-`docker-compose up` で起動して、Source ConnectorのSMTあり2のConnectorとSink Connectorを登録してあげればOK
+`docker-compose up` で起動して、Source ConnectorのSMTあり2とSink Connectorを登録してあげればOK
 
 ※Db2がちゃんと上がりきるのを待って実行すること
 
@@ -211,6 +211,64 @@ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 
 
 curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @jdbc-sink-connector.json
 
+## MySQL
+
+```
+docker exec -it mysql bash
+```
+
+```
+# mysql -u root -p
+Enter password:
+```
+
+```
+mysql> use inventory;
+```
+
+```
+mysql> show tables;
++---------------------+
+| Tables_in_inventory |
++---------------------+
+| addresses           |
+| customers           |
+| geom                |
+| orders              |
+| products            |
+| products_on_hand    |
++---------------------+
+6 rows in set (0.01 sec)
+```
+
+```
+mysql> show columns from customers;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| id         | int          | NO   | PRI | NULL    | auto_increment |
+| first_name | varchar(255) | NO   |     | NULL    |                |
+| last_name  | varchar(255) | NO   |     | NULL    |                |
+| email      | varchar(255) | NO   | UNI | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+4 rows in set (0.15 sec)
+```
+
+```
+mysql> SELECT * FROM customers;
++------+------------+-----------+-----------------------+
+| id   | first_name | last_name | email                 |
++------+------------+-----------+-----------------------+
+| 1001 | Sally      | Thomas    | sally.thomas@acme.com |
+| 1002 | George     | Bailey    | gbailey@foobar.com    |
+| 1003 | Edward     | Walker    | ed@walker.com         |
+| 1004 | Anne       | Kretchmar | annek@noanswer.org    |
++------+------------+-----------+-----------------------+
+4 rows in set (0.01 sec)
+```
+
+
+
 ## Kafka
 
 ```
@@ -248,11 +306,17 @@ $ ./kafka-console-consumer.sh --topic dbserver1.inventory.customers --from-begin
 
 ## Db2
 
+```
 docker exec -it db2 bash
+```
 
+```
 su - db2inst1
+```
 
+```
 db2 connect to MYDB
+```
 
 ```
 db2 list tables
