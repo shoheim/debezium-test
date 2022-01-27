@@ -221,6 +221,7 @@ docker exec -it mysql bash
 # mysql -u root -p
 Enter password:
 ```
+※パスワードはdocker-compose.ymlのMYSQL_ROOT_PASSWORDで指定している値
 
 ```
 mysql> use inventory;
